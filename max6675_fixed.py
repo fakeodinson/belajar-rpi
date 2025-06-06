@@ -55,17 +55,25 @@ class Max6675(sensorbase.SensorBase):
 if __name__ == '__main__':
     try:
         sensor = Max6675(0, 0)
-        for cache in [0, 5]:
-            print('**********')
-            print('Cache lifetime is {}'.format(cache))  # Fixed print statement
-            sensor.cache_lifetime = cache
-            for c in range(10):
-                temp = sensor.temperature
-                if temp is not None:
-                    print(f"Temperature: {temp}°C")
-                else:
-                    print("Temperature: No reading")
-                time.sleep(1)
+        sensor.cache_lifetime = 0  # Set cache to 0 for real-time readings
+        
+        print("MAX6675 Thermocouple Reader")
+        print("Press Ctrl+C to exit")
+        print("-" * 30)
+        
+        while True:
+            temp = sensor.temperature
+            if temp is not None:
+                # Display temperature in both Celsius and Fahrenheit
+                temp_f = temp * 9/5 + 32
+                print(f"Temperature: {temp:.2f}°C ({temp_f:.2f}°F)")
+            else:
+                print("Temperature: No reading")
+            
+            time.sleep(1)  # Update every second
+            
+    except KeyboardInterrupt:
+        print("\nExiting...")
     except Exception as e:
         print(f"Error: {e}")
         print("Make sure SPI is enabled and wiring is correct.")
